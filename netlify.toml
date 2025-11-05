@@ -1,0 +1,29 @@
+[build]
+  # Directorio donde están los archivos estáticos
+  publish = "."
+  
+[functions]
+  # Directorio donde están las Functions
+  directory = "netlify/functions"
+
+# Configuración para Functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/sessions/:splat"
+  status = 200
+
+# Headers globales
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+
+# Headers para Functions
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "Content-Type,Authorization"
+    Access-Control-Allow-Methods = "GET,POST,OPTIONS"

